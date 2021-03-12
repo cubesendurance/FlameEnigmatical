@@ -19,7 +19,7 @@ class DataImportDialog extends React.Component {
                     <div className="sk-panel-content">
                         <div className="sk-panel-section sk-panel-hero">
                             <div className="sk-panel-row">
-                                <input type="file" id="fileImport" accept=".json" onChange={this.onFileChange.bind(this)} />
+                                <input type="file" id="fileImport" accept=".json" />
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@ class DataImportDialog extends React.Component {
                             <div className="sk-button neutral" onClick={this.props.onCancel}>
                                 <div className="sk-label">Cancel</div>
                             </div>
-                            <div className="sk-button info" onClick={(event) => this.props.onConfirm(this.state.selectedFile)}>
+                            <div className="sk-button info" onClick={this.props.onConfirm()}>
                                 <div className="sk-label">Import</div>
                             </div>
                         </div>
