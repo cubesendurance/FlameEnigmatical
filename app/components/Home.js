@@ -130,8 +130,8 @@ export default class Home extends React.Component {
     })
   }
 
-  attemptImport = () => {
-    let a = document.getElementById('fileImport').files[0];
+  attemptImport = (a) => {
+    console.log(a);
     let fr = new FileReader();
     fr.readAsText(a, 'UTF-8');
     console.log(fr.result);
