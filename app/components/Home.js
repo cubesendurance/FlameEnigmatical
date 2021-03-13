@@ -133,19 +133,23 @@ export default class Home extends React.Component {
     })
   }
 
-  attemptImport = (a) => {
+  attemptImport = () => {
     console.log(this.state.jsonPrepImport);
-    console.log(JSON.parse(this.state.jsonPrepImport));
+    try {
+      console.log(JSON.parse(this.state.jsonPrepImport));
+    } catch (error) {
+      console.log("Woops an error occured!");
+    }
     this.setState({
-      importMode: false,
+      importMode: false
     })
   }
 
   updateTextState = (text) => {
     console.log("Setting state here", text);
-    this.setState(() => {
+    this.setState({
       jsonPrepImport: text
-    })
+    });
   }
 
   onEdit = id => {
@@ -217,7 +221,7 @@ export default class Home extends React.Component {
         {this.state.parseError && <DataErrorAlert />}
         {this.state.importMode &&
           <DataImportEntry
-            onUpdate={() => this.updateTextState}
+            onUpdate={(text) => this.updateTextState(text)}
             onConfirm={() => this.attemptImport}
             onCancel={() => this.setState({ importMode: false })}
           />
