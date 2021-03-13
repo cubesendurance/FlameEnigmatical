@@ -1,11 +1,22 @@
 import React from 'react';
 
-class DataImportDialog extends React.Component {
-    state = {
-        jsonResponse: {}
-    };
 
-    updateText() { }
+const initialState = {
+    jsonResponse: {}
+};
+class DataImportDialog extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = initialState;
+        this.updateText = this.updateText.bind(this);
+    }
+
+    updateText(event) {
+        debugger;
+        console.log("test");
+        console.log(this.props)
+        this.props.onUpdate(event.target.value);
+    }
     render() {
         return (
             <div className="auth-overlay">

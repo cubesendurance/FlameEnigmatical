@@ -9,6 +9,7 @@ import DataImportEntry from './DataImportEntry';
 
 const initialState = {
   text: '',
+  jsonPrepImport: '',
   entries: [],
   parseError: false,
   importMode: false,
@@ -23,6 +24,8 @@ export default class Home extends React.Component {
     super(props);
     this.configureEditorKit();
     this.state = initialState;
+    this.attemptImport = this.attemptImport.bind(this);
+    this.updateTextState = this.updateTextState.bind(this);
   }
 
   configureEditorKit() {
@@ -131,14 +134,17 @@ export default class Home extends React.Component {
   }
 
   attemptImport = (a) => {
-    console.log(a);
-    let fr = new FileReader();
-    fr.readAsText(a, 'UTF-8');
-    console.log(fr.result);
-    window.result = fr;
-    console.log(JSON.parse(fr.result));
+    console.log(this.state.jsonPrepImport);
+    console.log(JSON.parse(this.state.jsonPrepImport));
     this.setState({
       importMode: false,
+    })
+  }
+
+  updateTextState = (text) => {
+    console.log("Setting state here", text);
+    this.setState(() => {
+      jsonPrepImport: text
     })
   }
 
@@ -211,6 +217,7 @@ export default class Home extends React.Component {
         {this.state.parseError && <DataErrorAlert />}
         {this.state.importMode &&
           <DataImportEntry
+            onUpdate={() => this.updateTextState}
             onConfirm={() => this.attemptImport}
             onCancel={() => this.setState({ importMode: false })}
           />
