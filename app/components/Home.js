@@ -93,6 +93,19 @@ export default class Home extends React.Component {
     });
   };
 
+  addEntries = newEntries => {
+    this.setState(state => {
+      const entries = state.entries.concat(newEntries);
+      this.saveNote(entries);
+
+      return {
+        editMode: false,
+        editEntry: null,
+        entries
+      };
+    });
+  };
+
   editEntry = ({ id, entry }) => {
     this.setState(state => {
       const entries = update(state.entries, { [id]: { $set: entry } });
@@ -134,19 +147,39 @@ export default class Home extends React.Component {
   }
 
   attemptImport = () => {
-    console.log(this.state.jsonPrepImport);
+    let attemptedImport = [];
+    let rawJSON = null;
+    //We're going w/ a Bitwarden import here and add extras under the raw: {} section
+
+    // currently .service, .account, .secret, .notes
+    // we're going to add another field .raw which will allow us to progressively update as we
+    // add features
     try {
-      console.log(JSON.parse(this.state.jsonPrepImport));
+      rawJSON = JSON.parse(this.state.jsonPrepImport);
     } catch (error) {
-      console.log("Woops an error occured!");
+      console.log("Error occured parsing a note");
     }
+
+    if (rawJSON) {
+      //We're going to look under items[]
+      for (let i = 0; i < rawJSON.items.length; i++) {
+        let item = {};
+        item.service = rawJSON.items[i].name;
+        item.account = rawJSON.items[i].login.username;
+        item.secret = rawJSON.items[i].login.password;
+        item.notes = rawJSON.items[i].notes;
+        item.raw = rawJSON.items[i];
+        attemptedImport.push(item);
+      }
+      this.addEntries(attemptedImport);
+    }
+
     this.setState({
       importMode: false
     })
   }
 
   updateTextState = (text) => {
-    console.log("Setting state here", text);
     this.setState({
       jsonPrepImport: text
     });
