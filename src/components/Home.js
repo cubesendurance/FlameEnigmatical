@@ -6,7 +6,7 @@ import ConfirmDialog from './ConfirmDialog';
 import DataErrorAlert from './DataErrorAlert';
 import { EditorKit, EditorKitDelegate } from 'sn-editor-kit';
 import DataImportEntry from './DataImportEntry';
-
+import { importJSON } from '../datatransformation/import/import';
 const initialState = {
   text: '',
   jsonPrepImport: '',
@@ -20,6 +20,9 @@ const initialState = {
 };
 
 export default class Home extends React.Component {
+  state: { text: string; jsonPrepImport: string; entries: any[]; parseError: boolean; importMode: boolean; editMode: boolean; editEntry: any; confirmRemove: boolean; displayCopy: boolean; };
+  editorKit: any;
+  clearTooltipTimer: any;
   constructor(props) {
     super(props);
     this.configureEditorKit();
@@ -147,13 +150,8 @@ export default class Home extends React.Component {
   }
 
   attemptImport = () => {
-    let attemptedImport = [];
     let rawJSON = null;
-    //We're going w/ a Bitwarden import here and add extras under the raw: {} section
 
-    // currently .service, .account, .secret, .notes
-    // we're going to add another field .raw which will allow us to progressively update as we
-    // add features
     try {
       rawJSON = JSON.parse(this.state.jsonPrepImport);
     } catch (error) {
@@ -161,17 +159,10 @@ export default class Home extends React.Component {
     }
 
     if (rawJSON) {
-      //We're going to look under items[]
-      for (let i = 0; i < rawJSON.items.length; i++) {
-        let item = {};
-        item.service = rawJSON.items[i].name;
-        item.account = rawJSON.items[i].login.username;
-        item.secret = rawJSON.items[i].login.password;
-        item.notes = rawJSON.items[i].notes;
-        item.raw = rawJSON.items[i];
-        attemptedImport.push(item);
+      let importStatusAndcontent = importJSON(rawJSON)
+      if (importStatusAndcontent[1]) {
+        this.addEntries(importStatusAndcontent[0]);
       }
-      this.addEntries(attemptedImport);
     }
 
     this.setState({
@@ -240,62 +231,71 @@ export default class Home extends React.Component {
   render() {
     const editEntry = this.state.editEntry || {};
     return (
-      <div className="sn-component">
+      <div className="sn-component" >
         <div
-          className={`auth-copy-notification ${this.state.displayCopy ? 'visible' : 'hidden'
-            }`}
+          className={
+            `auth-copy-notification ${this.state.displayCopy ? 'visible' : 'hidden'
+            }`
+          }
         >
-          <div className="sk-panel">
-            <div className="sk-font-small sk-bold">
+          <div className="sk-panel" >
+            <div className="sk-font-small sk-bold" >
               Copied token to clipboard.
-            </div>
-          </div>
-        </div>
-        {this.state.parseError && <DataErrorAlert />}
-        {this.state.importMode &&
-          <DataImportEntry
-            onUpdate={(text) => this.updateTextState(text)}
-            onConfirm={() => this.attemptImport}
-            onCancel={() => this.setState({ importMode: false })}
-          />
-        }
-        <div id="header">
-          <div className="sk-button-group">
-            <div onClick={this.onAddNew} className="sk-button info">
-              <div className="sk-label">Add New</div>
-            </div>
-            <div onClick={this.onImportNew} className="sk-button info">
-              <div className="sk-label">Import</div>
-            </div>
-          </div>
-        </div>
+            < /div>
+            < /div>
+            < /div>
+    {
+                this.state.parseError && <DataErrorAlert />}
+              {
+                this.state.importMode &&
+                <DataImportEntry
+                  onUpdate={(text) => this.updateTextState(text)}
+                  onConfirm={() => this.attemptImport
+                  }
+                  onCancel={() => this.setState({ importMode: false })
+                  }
+                />
+              }
+              <div id="header" >
+                <div className="sk-button-group" >
+                  <div onClick={this.onAddNew} className="sk-button info" >
+                    <div className="sk-label" > Add New < /div>
+        < /div>
+        < div onClick={this.onImportNew} className="sk-button info" >
+                        <div className="sk-label" > Import < /div>
+            < /div>
+            < /div>
+            < /div>
 
-        <div id="content">
-          {this.state.editMode ? (
-            <EditEntry
-              id={editEntry.id}
-              entry={editEntry.entry}
-              onSave={this.onSave}
-              onCancel={this.onCancel}
-            />
-          ) : (
-            <ViewEntries
-              entries={this.state.entries}
-              onEdit={this.onEdit}
-              onRemove={this.onRemove}
-              onCopyToken={this.onCopyToken}
-            />
-          )}
-          {this.state.confirmRemove && (
-            <ConfirmDialog
-              title={`Remove ${editEntry.entry.service}`}
-              message="Are you sure you want to remove this entry?"
-              onConfirm={() => this.removeEntry(editEntry.id)}
-              onCancel={this.onCancel}
-            />
-          )}
-        </div>
-      </div>
+            < div id="content" >
+                            {
+                              this.state.editMode ? (
+                                <EditEntry
+                                  id={editEntry.id}
+                                  entry={editEntry.entry}
+                                  onSave={this.onSave}
+                                  onCancel={this.onCancel}
+                                />
+                              ) : (
+                                <ViewEntries
+                                  entries={this.state.entries}
+                                  onEdit={this.onEdit}
+                                  onRemove={this.onRemove}
+                                  onCopyToken={this.onCopyToken}
+                                />
+                              )}
+                            {
+                              this.state.confirmRemove && (
+                                <ConfirmDialog
+                                  title={`Remove ${editEntry.entry.service}`}
+                                  message="Are you sure you want to remove this entry?"
+                                  onConfirm={() => this.removeEntry(editEntry.id)
+                                  }
+                                  onCancel={this.onCancel}
+                                />
+                              )}
+                          </div>
+                          < /div>
     );
   }
 }

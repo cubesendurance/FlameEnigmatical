@@ -12,9 +12,6 @@ class DataImportDialog extends React.Component {
     }
 
     updateText(event) {
-        debugger;
-        console.log("test");
-        console.log(this.props)
         this.props.onUpdate(event.target.value);
     }
     render() {
