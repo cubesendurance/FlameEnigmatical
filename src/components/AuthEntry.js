@@ -21,6 +21,7 @@ export default class AuthEntry extends React.Component {
 
   updateToken = async () => {
     const { secret } = this.props.entry;
+    if (!secret) return;//In the event of undefined we return
     const token = await totp.gen(secret);
 
     const timeLeft = this.getTimeLeft();
