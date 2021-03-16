@@ -21,6 +21,7 @@ export default class AuthEntry extends React.Component {
 
   updateToken = async () => {
     const { secret } = this.props.entry;
+    if (!secret) return;//In the event of undefined we return
     const token = await totp.gen(secret);
 
     const timeLeft = this.getTimeLeft();
@@ -31,7 +32,7 @@ export default class AuthEntry extends React.Component {
     this.timer = setTimeout(this.updateToken, timeLeft * 1000);
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If the secret changed make sure to recalculate token
     if (nextProps.entry.secret !== this.props.entry.secret) {
       clearTimeout(this.timer);

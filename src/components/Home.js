@@ -6,7 +6,7 @@ import ConfirmDialog from './ConfirmDialog';
 import DataErrorAlert from './DataErrorAlert';
 import { EditorKit, EditorKitDelegate } from 'sn-editor-kit';
 import DataImportEntry from './DataImportEntry';
-
+import { importJSON } from '../datatransformation/import/import';
 const initialState = {
   text: '',
   jsonPrepImport: '',
@@ -74,6 +74,7 @@ export default class Home extends React.Component {
       supportsFilesafe: false
     });
   }
+
 
   saveNote(entries) {
     this.editorKit.onEditorValueChanged(JSON.stringify(entries, null, 2));
@@ -147,13 +148,8 @@ export default class Home extends React.Component {
   }
 
   attemptImport = () => {
-    let attemptedImport = [];
     let rawJSON = null;
-    //We're going w/ a Bitwarden import here and add extras under the raw: {} section
 
-    // currently .service, .account, .secret, .notes
-    // we're going to add another field .raw which will allow us to progressively update as we
-    // add features
     try {
       rawJSON = JSON.parse(this.state.jsonPrepImport);
     } catch (error) {
@@ -161,17 +157,10 @@ export default class Home extends React.Component {
     }
 
     if (rawJSON) {
-      //We're going to look under items[]
-      for (let i = 0; i < rawJSON.items.length; i++) {
-        let item = {};
-        item.service = rawJSON.items[i].name;
-        item.account = rawJSON.items[i].login.username;
-        item.secret = rawJSON.items[i].login.password;
-        item.notes = rawJSON.items[i].notes;
-        item.raw = rawJSON.items[i];
-        attemptedImport.push(item);
+      let importStatusAndcontent = importJSON(rawJSON)
+      if (importStatusAndcontent[1]) {
+        this.addEntries(importStatusAndcontent[0]);
       }
-      this.addEntries(attemptedImport);
     }
 
     this.setState({
