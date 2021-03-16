@@ -1,6 +1,5 @@
 import React from 'react';
 import QRCodeReader from './QRCodeReader';
-import { secretPattern } from '../lib/otp';
 
 export default class EditEntry extends React.Component {
   static defaultProps = {
