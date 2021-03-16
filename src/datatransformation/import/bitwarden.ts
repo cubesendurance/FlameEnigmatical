@@ -2,11 +2,13 @@
  * Utilities to detect and convert from the legendary bitwarden password manager JSON format.
  */
 
-export function isBitwardenFormat(jsonObject: JSON): boolean {
+import { v0 } from "../export/v0";
+
+export function isBitwardenFormat(jsonObject: any): boolean {
     return jsonObject["folders"] && jsonObject["items"];
 }
 
-export function convertFromBitwardenFormat(jsonObject: JSON): v0[] {
+export function convertFromBitwardenFormat(jsonObject: any): v0[] {
     let v0Entries: v0[] = [];
     let folderMapping: folderMapping = {};
     //We construct folder mapping
@@ -27,7 +29,7 @@ export function convertFromBitwardenFormat(jsonObject: JSON): v0[] {
             version: 0
         };
 
-        entry.raw.partial["folder"] = folderMapping[entry.raw.truely["folderId"]];
+        entry.raw.partial["folder"] = folderMapping[entry.raw.truely["folderId"]] as string;
 
         v0Entries.push(entry);
     }

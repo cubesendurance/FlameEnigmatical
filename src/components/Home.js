@@ -20,9 +20,6 @@ const initialState = {
 };
 
 export default class Home extends React.Component {
-  state: { text: string; jsonPrepImport: string; entries: any[]; parseError: boolean; importMode: boolean; editMode: boolean; editEntry: any; confirmRemove: boolean; displayCopy: boolean; };
-  editorKit: any;
-  clearTooltipTimer: any;
   constructor(props) {
     super(props);
     this.configureEditorKit();
@@ -77,6 +74,7 @@ export default class Home extends React.Component {
       supportsFilesafe: false
     });
   }
+
 
   saveNote(entries) {
     this.editorKit.onEditorValueChanged(JSON.stringify(entries, null, 2));
@@ -231,71 +229,62 @@ export default class Home extends React.Component {
   render() {
     const editEntry = this.state.editEntry || {};
     return (
-      <div className="sn-component" >
+      <div className="sn-component">
         <div
-          className={
-            `auth-copy-notification ${this.state.displayCopy ? 'visible' : 'hidden'
-            }`
-          }
+          className={`auth-copy-notification ${this.state.displayCopy ? 'visible' : 'hidden'
+            }`}
         >
-          <div className="sk-panel" >
-            <div className="sk-font-small sk-bold" >
+          <div className="sk-panel">
+            <div className="sk-font-small sk-bold">
               Copied token to clipboard.
-            < /div>
-            < /div>
-            < /div>
-    {
-                this.state.parseError && <DataErrorAlert />}
-              {
-                this.state.importMode &&
-                <DataImportEntry
-                  onUpdate={(text) => this.updateTextState(text)}
-                  onConfirm={() => this.attemptImport
-                  }
-                  onCancel={() => this.setState({ importMode: false })
-                  }
-                />
-              }
-              <div id="header" >
-                <div className="sk-button-group" >
-                  <div onClick={this.onAddNew} className="sk-button info" >
-                    <div className="sk-label" > Add New < /div>
-        < /div>
-        < div onClick={this.onImportNew} className="sk-button info" >
-                        <div className="sk-label" > Import < /div>
-            < /div>
-            < /div>
-            < /div>
+            </div>
+          </div>
+        </div>
+        {this.state.parseError && <DataErrorAlert />}
+        {this.state.importMode &&
+          <DataImportEntry
+            onUpdate={(text) => this.updateTextState(text)}
+            onConfirm={() => this.attemptImport}
+            onCancel={() => this.setState({ importMode: false })}
+          />
+        }
+        <div id="header">
+          <div className="sk-button-group">
+            <div onClick={this.onAddNew} className="sk-button info">
+              <div className="sk-label">Add New</div>
+            </div>
+            <div onClick={this.onImportNew} className="sk-button info">
+              <div className="sk-label">Import</div>
+            </div>
+          </div>
+        </div>
 
-            < div id="content" >
-                            {
-                              this.state.editMode ? (
-                                <EditEntry
-                                  id={editEntry.id}
-                                  entry={editEntry.entry}
-                                  onSave={this.onSave}
-                                  onCancel={this.onCancel}
-                                />
-                              ) : (
-                                <ViewEntries
-                                  entries={this.state.entries}
-                                  onEdit={this.onEdit}
-                                  onRemove={this.onRemove}
-                                  onCopyToken={this.onCopyToken}
-                                />
-                              )}
-                            {
-                              this.state.confirmRemove && (
-                                <ConfirmDialog
-                                  title={`Remove ${editEntry.entry.service}`}
-                                  message="Are you sure you want to remove this entry?"
-                                  onConfirm={() => this.removeEntry(editEntry.id)
-                                  }
-                                  onCancel={this.onCancel}
-                                />
-                              )}
-                          </div>
-                          < /div>
+        <div id="content">
+          {this.state.editMode ? (
+            <EditEntry
+              id={editEntry.id}
+              entry={editEntry.entry}
+              onSave={this.onSave}
+              onCancel={this.onCancel}
+            />
+          ) : (
+            <ViewEntries
+              entries={this.state.entries}
+              onEdit={this.onEdit}
+              onRemove={this.onRemove}
+              onCopyToken={this.onCopyToken}
+            />
+          )}
+          {this.state.confirmRemove && (
+            <ConfirmDialog
+              title={`Remove ${editEntry.entry.service}`}
+              message="Are you sure you want to remove this entry?"
+              onConfirm={() => this.removeEntry(editEntry.id)}
+              onCancel={this.onCancel}
+            />
+          )}
+        </div>
+      </div>
     );
   }
 }

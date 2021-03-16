@@ -1,3 +1,4 @@
+import { v0 } from "../export/v0";
 import { convertFromBitwardenFormat, isBitwardenFormat } from "./bitwarden";
 
 export function importJSON(jsonObject: JSON): ImportStatusAndContent {
