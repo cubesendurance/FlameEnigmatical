@@ -26,8 +26,8 @@ const initialState = {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
     this.configureEditorKit();
+    this.state = initialState;
     this.attemptImport = this.attemptImport.bind(this);
     this.updateTextState = this.updateTextState.bind(this);
   }
@@ -44,19 +44,14 @@ export default class App extends React.Component {
         if (text) {
           try {
             entries = JSON.parse(text);
+            if (!isValidFormat(entries)) {
+              parseError = true;
+              entries = [];//We need to make sure entries is empty array otherwise we'll get a
+              // blank screen (side effect of converting JSON object that's valid but not correct format)
+            }
           } catch (e) {
             // Couldn't parse the content
             parseError = true;
-            this.setState({
-              parseError: true
-            });
-          } finally { //In the event it's valid JSON but NOT our format...
-            if (!isValidFormat(entries)) {
-              parseError = true;
-              this.setState({
-                parseError: true
-              });
-            }
           }
         }
 
