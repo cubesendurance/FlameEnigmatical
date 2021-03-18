@@ -18,7 +18,7 @@ function v0Format(jsonObject: any): boolean {
         return (typeof arrayOfJsonObjects[0].account === 'string' &&
             typeof arrayOfJsonObjects[0].service === 'string' &&
             typeof arrayOfJsonObjects[0].notes === 'string' &&
-            Number(arrayOfJsonObjects[0].version) === 1)
+            Number(arrayOfJsonObjects[0].version) === 0)
     } else {
         return false;
     }
