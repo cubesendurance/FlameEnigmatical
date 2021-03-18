@@ -7,6 +7,7 @@ import DataErrorAlert from './components/DataErrorAlert';
 import { EditorKit, EditorKitDelegate } from 'sn-editor-kit';
 import DataImportEntry from './components/DataImportEntry';
 import { importJSON } from './datatransformation/import/import';
+import { isValidFormat } from './datatransformation/verification/verification';
 
 //Testing harness <3
 
@@ -49,6 +50,13 @@ export default class App extends React.Component {
             this.setState({
               parseError: true
             });
+          } finally { //In the event it's valid JSON but NOT our format...
+            if (!isValidFormat(entries)) {
+              parseError = true;
+              this.setState({
+                parseError: true
+              });
+            }
           }
         }
 
