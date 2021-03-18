@@ -1,5 +1,4 @@
 import React from 'react';
-import QRCodeReader from './QRCodeReader';
 
 export default class EditEntry extends React.Component {
   static defaultProps = {
@@ -63,12 +62,6 @@ export default class EditEntry extends React.Component {
           <div className="sk-panel-section">
             <div className="sk-panel-section-title sk-panel-row">
               {id != null ? 'Edit entry' : 'Add new entry'}
-              {id == null && (
-                <QRCodeReader
-                  onSuccess={this.onQRCodeSuccess}
-                  onError={this.onQRCodeError}
-                />
-              )}
             </div>
             <form onSubmit={this.onSave}>
               <input
