@@ -62,6 +62,13 @@ export default class EditEntry extends React.Component {
           <div className="sk-panel-section">
             <div className="sk-panel-section-title sk-panel-row">
               {id != null ? 'Edit entry' : 'Add new entry'}
+              <button
+                type="button"
+                onClick={this.props.onImport}
+                className="sk-button neutral"
+              >
+                <div className="sk-label">Import</div>
+              </button>
             </div>
             <form onSubmit={this.onSave}>
               <input
