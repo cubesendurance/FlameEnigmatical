@@ -153,6 +153,7 @@ export default class App extends React.Component {
   onImportNew = () => {
     this.setState({
       importMode: true,
+      editMode: false
     })
   }
 
@@ -186,6 +187,7 @@ export default class App extends React.Component {
   onEdit = id => {
     this.setState(state => ({
       editMode: true,
+      importMode: false,
       editEntry: {
         id,
         entry: state.entries[id]
@@ -250,31 +252,33 @@ export default class App extends React.Component {
           </div>
         </div>
         {this.state.parseError && <DataErrorAlert />}
-        {this.state.importMode &&
-          <DataImportEntry
-            onUpdate={(text) => this.updateTextState(text)}
-            onConfirm={() => this.attemptImport}
-            onCancel={() => this.setState({ importMode: false })}
-          />
-        }
-        <div id="header">
-          <div className="sk-button-group">
-            <div onClick={this.onAddNew} className="sk-button info">
-              <div className="sk-label">Add New</div>
-            </div>
-            <div onClick={this.onImportNew} className="sk-button info">
-              <div className="sk-label">Import</div>
-            </div>
+
+        <div id="header" style={{"padding-left":"13px", "padding-right":"13px"}}>
+          <div className="section-title-bar-header" style={{"min-width":"100%"}} onClick={this.onAddNew}>
+            <div style={{"font-weight":"800"}}>Orcawolf Secrets</div>
+            <div class="sk-button constrast wide" style={{"font-size":"larger"}}>+</div>
+          </div>
+          <div style={{ "position": "relative", "min-width":"100%" }}>
+            <input className="sk-input constrast filter-bar" type="text" placeholder="Search secrets" />
+            <div id="search-clear-button">✕</div>
           </div>
         </div>
 
         <div id="content">
+          {this.state.importMode &&
+            <DataImportEntry
+              onUpdate={(text) => this.updateTextState(text)}
+              onConfirm={() => this.attemptImport}
+              onCancel={() => this.setState({ importMode: false })}
+            />
+          }
           {this.state.editMode ? (
             <EditEntry
               id={editEntry.id}
               entry={editEntry.entry}
               onSave={this.onSave}
               onCancel={this.onCancel}
+              onImport={this.onImportNew}
             />
           ) : (
             <ViewEntries
