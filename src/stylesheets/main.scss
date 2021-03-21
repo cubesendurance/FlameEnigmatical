@@ -32,7 +32,7 @@ html {
   color: var(--sn-stylekit-foreground-color);
 
   min-height: 26px;
-  padding: 10px;
+  padding: 13px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -290,6 +290,10 @@ html {
 //   }
 // }
 
+#header-search-container{
+  position: relative;
+  min-width: 100%;
+}
 
 .filter-bar {
   background-color: var(--sn-stylekit-contrast-background-color);
@@ -330,15 +334,18 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 100%;
+  font-weight: 800;
 }
 
 .sk-button.constrast {
-color: var(--sn-stylekit-contrast-foreground-color);
+    color: var(--sn-stylekit-contrast-foreground-color);
     position: relative;
     background-color: var(--sn-stylekit-contrast-background-color);
     overflow: hidden;
     border-radius: var(--sn-stylekit-general-border-radius);
     border-color: var(--sn-stylekit-contrast-background-color);
+    font-weight: normal;
 }
 
 .sk-button.wide {

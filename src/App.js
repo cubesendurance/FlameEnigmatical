@@ -4,6 +4,7 @@ import EditEntry from './components/EditEntry';
 import ViewEntries from './components/ViewEntries';
 import ConfirmDialog from './components/ConfirmDialog';
 import DataErrorAlert from './components/DataErrorAlert';
+import HeaderEntry from './components/HeaderEntry'
 import { EditorKit, EditorKitDelegate } from 'sn-editor-kit';
 import DataImportEntry from './components/DataImportEntry';
 import { importJSON } from './datatransformation/import/import';
@@ -12,6 +13,7 @@ import { isValidFormat } from './datatransformation/verification/verification';
 //Testing harness <3
 
 const initialState = {
+  filterText: '',
   text: '',
   jsonPrepImport: '',
   entries: [],
@@ -195,6 +197,18 @@ export default class App extends React.Component {
     }));
   };
 
+  onSearch = text => {
+    this.setState(state => ({
+      filterText: text
+    }))
+  }
+
+  onUpdateSearch = text => {
+    this.setState(state => ({
+      filterText: text
+    }))
+  }
+
   onCancel = () => {
     this.setState({
       confirmRemove: false,
@@ -252,18 +266,7 @@ export default class App extends React.Component {
           </div>
         </div>
         {this.state.parseError && <DataErrorAlert />}
-
-        <div id="header" style={{"padding-left":"13px", "padding-right":"13px"}}>
-          <div className="section-title-bar-header" style={{"min-width":"100%"}} onClick={this.onAddNew}>
-            <div style={{"font-weight":"800"}}>Orcawolf Secrets</div>
-            <div class="sk-button constrast wide" style={{"font-size":"larger"}}>+</div>
-          </div>
-          <div style={{ "position": "relative", "min-width":"100%" }}>
-            <input className="sk-input constrast filter-bar" type="text" placeholder="Search secrets" />
-            <div id="search-clear-button">✕</div>
-          </div>
-        </div>
-
+        <HeaderEntry onAddNew={this.onAddNew} onUpdateSearch={(text) => this.onUpdateSearch(text)}/>
         <div id="content">
           {this.state.importMode &&
             <DataImportEntry
