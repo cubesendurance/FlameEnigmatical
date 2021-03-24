@@ -3,10 +3,10 @@ import AuthEntry from './AuthEntry';
 
 const ViewEntries = ({ entries, onEdit, onRemove, onCopyToken }) => (
   <div className="auth-list">
-    {entries.map((entry, idx) => (
+    {entries.map((entry) => (
       <AuthEntry
-        key={idx}
-        id={idx}
+        key={entry.uuid}
+        id={entry.uuid}
         entry={entry}
         onEdit={onEdit}
         onRemove={onRemove}

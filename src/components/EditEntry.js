@@ -6,10 +6,11 @@ export default class EditEntry extends React.Component {
   };
 
   constructor(props) {
+    debugger;
     super(props);
 
     this.state = {
-      id: this.props.id,
+      id: this.props.uuid,
       entry: this.props.entry
     };
   }
@@ -47,10 +48,6 @@ export default class EditEntry extends React.Component {
         secret: this.formatSecret(secret)
       }
     });
-  };
-
-  onQRCodeError = message => {
-    console.warn('Failed to parse QRCode:', message);
   };
 
   render() {

@@ -8,9 +8,8 @@ import HeaderEntry from './components/HeaderEntry'
 import { EditorKit, EditorKitDelegate } from 'sn-editor-kit';
 import DataImportEntry from './components/DataImportEntry';
 import { importJSON } from './datatransformation/import/import';
-import { isValidFormat } from './datatransformation/verification/verification';
-
-//Testing harness <3
+import { canUpgrade, isValidFormat } from './datatransformation/verification/verification';
+import { migrateFromV0 } from './datatransformation/migration/v0Migration';
 
 const initialState = {
   filterText: '',
@@ -42,11 +41,17 @@ export default class App extends React.Component {
       setEditorRawText: text => {
         let parseError = false;
         let entries = [];
-
+        debugger;
         if (text) {
           try {
             entries = JSON.parse(text);
-            if (!isValidFormat(entries)) {
+            //If not a valid format and can not upgrade THEN we have a parse error
+            if (!isValidFormat(entries) && canUpgrade(entries)) {
+              entries = migrateFromV0(entries);
+              // We need to write changes so we're not in an constant migration every single time
+              // that client opens up app (assuming that rarely edit entries)
+              this.saveNote(entries);
+            } else if(!isValidFormat(entries)){
               parseError = true;
               entries = [];//We need to make sure entries is empty array otherwise we'll get a
               // blank screen (side effect of converting JSON object that's valid but not correct format)
@@ -186,16 +191,25 @@ export default class App extends React.Component {
     });
   }
 
-  onEdit = id => {
+  onEdit = uuid => {
+    debugger;
     this.setState(state => ({
       editMode: true,
       importMode: false,
       editEntry: {
-        id,
-        entry: state.entries[id]
+        uuid,
+        entry: this.getByUUID(uuid, this.state.entries)
       }
     }));
   };
+
+  getByUUID = (uuid, entries) => {
+    for(let i = 0; i < entries.length; i++){
+      if(entries[i].uuid === uuid){
+        return entries[i]
+      }
+    }
+  }
 
   onSearch = text => {
     this.setState(state => ({
@@ -277,7 +291,7 @@ export default class App extends React.Component {
           }
           {this.state.editMode ? (
             <EditEntry
-              id={editEntry.id}
+              id={editEntry.uuid}
               entry={editEntry.entry}
               onSave={this.onSave}
               onCancel={this.onCancel}

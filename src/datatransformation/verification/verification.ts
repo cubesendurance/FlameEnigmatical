@@ -7,9 +7,12 @@ import { validate, version } from 'uuid';
  * @returns 
  */
 export function isValidFormat(jsonObject: any): boolean {
-    return v0Format(jsonObject);
+    return v1Format(jsonObject);
 }
 
+export function canUpgrade(jsonObject: any): boolean {
+    return v0Format(jsonObject);
+}
 /**
  * @deprecated Will be removed in 0.1.0
  * @param jsonObject JSON array to test
@@ -58,7 +61,7 @@ export function v1Format(jsonObject: any): boolean {
 }
 
 function isUUID(uuid: string): boolean {
-    return validate(uuid) && version(uuid) == 4;
+    return validate(uuid) && version(uuid) === 4;
 }
 
 function isSecondFactor(item: secondFactor): boolean {
