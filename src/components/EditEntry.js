@@ -6,11 +6,10 @@ export default class EditEntry extends React.Component {
   };
 
   constructor(props) {
-    debugger;
     super(props);
 
     this.state = {
-      id: this.props.uuid,
+      uuid: this.props.uuid,
       entry: this.props.entry
     };
   }
@@ -25,40 +24,32 @@ export default class EditEntry extends React.Component {
 
     const value =
       name === 'secret' ? this.formatSecret(target.value) : target.value;
-
-    this.setState(state => ({
-      entry: { ...state.entry, [name]: value }
-    }));
+    if(name === 'secret'){
+      this.setState(state => ({
+        entry: { ...state.entry, ['secondFactor']:{'isTrue2FA': true, 'secret': value}}
+      }));
+    } else {
+      this.setState(state => ({
+        entry: { ...state.entry, [name]: value }
+      }));
+    }
   };
 
   onSave = e => {
     e.preventDefault();
-    const { id, entry } = this.state;
-    this.props.onSave({ id, entry });
+    const { uuid, entry } = this.state;
+    this.props.onSave({ uuid, entry });
   };
-
-  onQRCodeSuccess = otpData => {
-    const { issuer: labelIssuer, account } = otpData.label;
-    const { issuer: queryIssuer, secret } = otpData.query;
-
-    this.setState({
-      entry: {
-        service: labelIssuer || queryIssuer || '',
-        account,
-        secret: this.formatSecret(secret)
-      }
-    });
-  };
-
+  
   render() {
-    const { id, entry } = this.state;
+    const { uuid, entry } = this.state;
 
     return (
       <div className="auth-edit sk-panel">
         <div className="sk-panel-content">
           <div className="sk-panel-section">
             <div className="sk-panel-section-title sk-panel-row">
-              {id != null ? 'Edit entry' : 'Add new entry'}
+              {uuid != null ? 'Edit entry' : 'Add new entry'}
               <div
                 onClick={this.props.onImport}
                 className="sk-button constrast wide"
@@ -87,8 +78,7 @@ export default class EditEntry extends React.Component {
               <input
                 name="secret"
                 className="sk-input contrast"
-                placeholder="Secret"
-                value={entry.secret}
+                placeholder="TOTP"
                 onChange={this.handleInputChange}
                 type="text"
                 required
@@ -112,7 +102,7 @@ export default class EditEntry extends React.Component {
                   </button>
                   <button type="submit" className="sk-button info">
                     <div className="sk-label">
-                      {id != null ? 'Save' : 'Create'}
+                      {uuid != null ? 'Save' : 'Create'}
                     </div>
                   </button>
                 </div>

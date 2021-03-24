@@ -123,9 +123,10 @@ export default class App extends React.Component {
     });
   };
 
-  editEntry = ({ id, entry }) => {
+  editEntry = ({ uuid, entry }) => {
     this.setState(state => {
-      const entries = update(state.entries, { [id]: { $set: entry } });
+      let index = this.getIndexFromUUID(uuid, this.state.entries);
+      const entries = update(state.entries, { [index]: { $set: entry } });
       this.saveNote(entries);
 
       return {
@@ -211,6 +212,15 @@ export default class App extends React.Component {
     }
   }
 
+  getIndexFromUUID = (uuid, entries) => {
+    for(let i = 0; i < entries.length; i++){
+      if(entries[i].uuid === uuid){
+        return i;
+      }
+    }
+    return -1;
+  }
+
   onSearch = text => {
     this.setState(state => ({
       filterText: text
@@ -241,10 +251,11 @@ export default class App extends React.Component {
     }));
   };
 
-  onSave = ({ id, entry }) => {
+  onSave = ({ uuid, entry }) => {
     // If there's no ID it's a new note
-    if (id != null) {
-      this.editEntry({ id, entry });
+    debugger;
+    if (uuid != null) {
+      this.editEntry({ uuid, entry });
     } else {
       this.addEntry(entry);
     }
@@ -291,7 +302,7 @@ export default class App extends React.Component {
           }
           {this.state.editMode ? (
             <EditEntry
-              id={editEntry.uuid}
+              uuid={editEntry.uuid}
               entry={editEntry.entry}
               onSave={this.onSave}
               onCancel={this.onCancel}
