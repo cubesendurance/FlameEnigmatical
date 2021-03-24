@@ -46,6 +46,7 @@ export default class HeaderEntry extends React.Component {
           <input className="sk-input constrast filter-bar" type="text" id="header-bar-search" placeholder="Search secrets" onChange={this.onSearch} />
           {(this.state.text !== '') && <div id="search-clear-button" onClick={this.onClear}>✕</div>}
         </div>
+
       </div>
     );
   }

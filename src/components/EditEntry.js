@@ -26,7 +26,7 @@ export default class EditEntry extends React.Component {
       name === 'secret' ? this.formatSecret(target.value) : target.value;
     if(name === 'secret'){
       this.setState(state => ({
-        entry: { ...state.entry, ['secondFactor']:{'isTrue2FA': true, 'secret': value}}
+        entry: { ...state.entry, 'secondFactor':{'isTrue2FA': true, 'secret': value}}
       }));
     } else {
       this.setState(state => ({
@@ -37,10 +37,23 @@ export default class EditEntry extends React.Component {
 
   onSave = e => {
     e.preventDefault();
-    const { uuid, entry } = this.state;
+    let { uuid, entry } = this.state;
+    // Need to make sure entry has secondFactor/secret set to '' if undefined
+    // Which will occur if the client didn't enter a second factor
+    if(!entry['secondFactor']){
+      entry['secondFactor'] = {
+        'secret':'',
+        'isTrue2FA': false
+      }
+    } else if (!entry['secondFactor']['secret']){
+      entry['secondFactor']['secret'] = '';
+    }
+    
+    //Updating as expected
     this.props.onSave({ uuid, entry });
+    
   };
-  
+
   render() {
     const { uuid, entry } = this.state;
 
@@ -81,7 +94,6 @@ export default class EditEntry extends React.Component {
                 placeholder="TOTP"
                 onChange={this.handleInputChange}
                 type="text"
-                required
               />
               <input
                 name="notes"

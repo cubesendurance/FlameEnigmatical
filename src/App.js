@@ -1,5 +1,6 @@
 import React from 'react';
 import update from 'immutability-helper';
+import { v4 } from 'uuid';
 import EditEntry from './components/EditEntry';
 import ViewEntries from './components/ViewEntries';
 import ConfirmDialog from './components/ConfirmDialog';
@@ -98,6 +99,9 @@ export default class App extends React.Component {
 
   // Entry operations
   addEntry = entry => {
+    //Currently we know the entry doesn't have a UUID
+    //Let's generate one now for the entry
+    entry['uuid'] = v4();
     this.setState(state => {
       const entries = state.entries.concat([entry]);
       this.saveNote(entries);
@@ -193,7 +197,6 @@ export default class App extends React.Component {
   }
 
   onEdit = uuid => {
-    debugger;
     this.setState(state => ({
       editMode: true,
       importMode: false,

@@ -80,14 +80,10 @@ export default class AuthEntry extends React.Component {
               <div className="auth-service">{service}</div>
               <div className="auth-account">{account}</div>
             </div>
-            <div className="auth-token-info">
-              <div className="auth-token" onClick={this.copyToken}>
-                <div>{token.substr(0, 3)}</div>
-                <div>{token.substr(3, 3)}</div>
-              </div>
-              <div className="auth-countdown">
-                <CountdownPie token={token} left={timeLeft} total={30} />
-              </div>
+            <div>
+              <div></div>
+              <div></div>
+              <div></div>
             </div>
           </div>
           <div className="auth-options">
