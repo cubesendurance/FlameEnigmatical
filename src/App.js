@@ -1,17 +1,19 @@
 import React from 'react';
 import update from 'immutability-helper';
+import { v4 } from 'uuid';
 import EditEntry from './components/EditEntry';
 import ViewEntries from './components/ViewEntries';
 import ConfirmDialog from './components/ConfirmDialog';
 import DataErrorAlert from './components/DataErrorAlert';
+import HeaderEntry from './components/HeaderEntry'
 import { EditorKit, EditorKitDelegate } from 'sn-editor-kit';
 import DataImportEntry from './components/DataImportEntry';
 import { importJSON } from './datatransformation/import/import';
-import { isValidFormat } from './datatransformation/verification/verification';
-
-//Testing harness <3
+import { canUpgrade, isValidFormat } from './datatransformation/verification/verification';
+import { migrateFromV0 } from './datatransformation/migration/v0Migration';
 
 const initialState = {
+  filterText: '',
   text: '',
   jsonPrepImport: '',
   entries: [],
@@ -40,11 +42,17 @@ export default class App extends React.Component {
       setEditorRawText: text => {
         let parseError = false;
         let entries = [];
-
+        debugger;
         if (text) {
           try {
             entries = JSON.parse(text);
-            if (!isValidFormat(entries)) {
+            //If not a valid format and can not upgrade THEN we have a parse error
+            if (!isValidFormat(entries) && canUpgrade(entries)) {
+              entries = migrateFromV0(entries);
+              // We need to write changes so we're not in an constant migration every single time
+              // that client opens up app (assuming that rarely edit entries)
+              this.saveNote(entries);
+            } else if(!isValidFormat(entries)){
               parseError = true;
               entries = [];//We need to make sure entries is empty array otherwise we'll get a
               // blank screen (side effect of converting JSON object that's valid but not correct format)
@@ -91,6 +99,9 @@ export default class App extends React.Component {
 
   // Entry operations
   addEntry = entry => {
+    //Currently we know the entry doesn't have a UUID
+    //Let's generate one now for the entry
+    entry['uuid'] = v4();
     this.setState(state => {
       const entries = state.entries.concat([entry]);
       this.saveNote(entries);
@@ -116,9 +127,10 @@ export default class App extends React.Component {
     });
   };
 
-  editEntry = ({ id, entry }) => {
+  editEntry = ({ uuid, entry }) => {
     this.setState(state => {
-      const entries = update(state.entries, { [id]: { $set: entry } });
+      let index = this.getIndexFromUUID(uuid, this.state.entries);
+      const entries = update(state.entries, { [index]: { $set: entry } });
       this.saveNote(entries);
 
       return {
@@ -153,6 +165,7 @@ export default class App extends React.Component {
   onImportNew = () => {
     this.setState({
       importMode: true,
+      editMode: false
     })
   }
 
@@ -183,15 +196,45 @@ export default class App extends React.Component {
     });
   }
 
-  onEdit = id => {
+  onEdit = uuid => {
     this.setState(state => ({
       editMode: true,
+      importMode: false,
       editEntry: {
-        id,
-        entry: state.entries[id]
+        uuid,
+        entry: this.getByUUID(uuid, this.state.entries)
       }
     }));
   };
+
+  getByUUID = (uuid, entries) => {
+    for(let i = 0; i < entries.length; i++){
+      if(entries[i].uuid === uuid){
+        return entries[i]
+      }
+    }
+  }
+
+  getIndexFromUUID = (uuid, entries) => {
+    for(let i = 0; i < entries.length; i++){
+      if(entries[i].uuid === uuid){
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  onSearch = text => {
+    this.setState(state => ({
+      filterText: text
+    }))
+  }
+
+  onUpdateSearch = text => {
+    this.setState(state => ({
+      filterText: text
+    }))
+  }
 
   onCancel = () => {
     this.setState({
@@ -211,10 +254,10 @@ export default class App extends React.Component {
     }));
   };
 
-  onSave = ({ id, entry }) => {
+  onSave = ({ uuid, entry }) => {
     // If there's no ID it's a new note
-    if (id != null) {
-      this.editEntry({ id, entry });
+    if (uuid != null) {
+      this.editEntry({ uuid, entry });
     } else {
       this.addEntry(entry);
     }
@@ -250,31 +293,22 @@ export default class App extends React.Component {
           </div>
         </div>
         {this.state.parseError && <DataErrorAlert />}
-        {this.state.importMode &&
-          <DataImportEntry
-            onUpdate={(text) => this.updateTextState(text)}
-            onConfirm={() => this.attemptImport}
-            onCancel={() => this.setState({ importMode: false })}
-          />
-        }
-        <div id="header">
-          <div className="sk-button-group">
-            <div onClick={this.onAddNew} className="sk-button info">
-              <div className="sk-label">Add New</div>
-            </div>
-            <div onClick={this.onImportNew} className="sk-button info">
-              <div className="sk-label">Import</div>
-            </div>
-          </div>
-        </div>
-
+        <HeaderEntry onAddNew={this.onAddNew} onUpdateSearch={(text) => this.onUpdateSearch(text)}/>
         <div id="content">
+          {this.state.importMode &&
+            <DataImportEntry
+              onUpdate={(text) => this.updateTextState(text)}
+              onConfirm={() => this.attemptImport}
+              onCancel={() => this.setState({ importMode: false })}
+            />
+          }
           {this.state.editMode ? (
             <EditEntry
-              id={editEntry.id}
+              uuid={editEntry.uuid}
               entry={editEntry.entry}
               onSave={this.onSave}
               onCancel={this.onCancel}
+              onImport={this.onImportNew}
             />
           ) : (
             <ViewEntries
