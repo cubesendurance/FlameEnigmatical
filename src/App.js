@@ -256,7 +256,6 @@ export default class App extends React.Component {
 
   onSave = ({ uuid, entry }) => {
     // If there's no ID it's a new note
-    debugger;
     if (uuid != null) {
       this.editEntry({ uuid, entry });
     } else {

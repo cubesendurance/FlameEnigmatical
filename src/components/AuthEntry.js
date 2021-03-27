@@ -1,22 +1,18 @@
 import React from 'react';
 import { totp } from '../lib/otp';
-import CountdownPie from './CountdownPie';
 import AuthMenu from './AuthMenu';
 
 export default class AuthEntry extends React.Component {
   constructor(props) {
     super(props);
-
+    console.log(props);
     this.state = {
+      account: this.props.entry['account'],
+      passphrase: this.props.entry['password'],
       token: ''
     };
 
     this.updateToken();
-  }
-
-  getTimeLeft() {
-    const seconds = new Date().getSeconds();
-    return seconds > 29 ? 60 - seconds : 30 - seconds;
   }
 
   updateToken = async () => {
@@ -56,6 +52,26 @@ export default class AuthEntry extends React.Component {
     });
   };
 
+  copyAccount = event => {
+    const textField = document.createElement('textarea');
+    textField.innerText = this.state.account;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand('copy');
+    textField.remove();
+    this.props.onCopyToken();
+  };
+
+  copyPassphrase = event => {
+    const textField = document.createElement('textarea');
+    textField.innerText = this.state.passphrase;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand('copy');
+    textField.remove();
+    this.props.onCopyToken();
+  };
+
   copyToken = event => {
     const textField = document.createElement('textarea');
     textField.innerText = this.state.token;
@@ -69,8 +85,6 @@ export default class AuthEntry extends React.Component {
   render() {
     const { service, account, notes } = this.props.entry;
     const { id, onEdit, onRemove } = this.props;
-    const { token } = this.state;
-    const timeLeft = this.getTimeLeft();
 
     return (
       <div className="sk-notification sk-base">
@@ -80,10 +94,16 @@ export default class AuthEntry extends React.Component {
               <div className="auth-service">{service}</div>
               <div className="auth-account">{account}</div>
             </div>
-            <div>
-              <div></div>
-              <div></div>
-              <div></div>
+            <div className="sk-button-row" style={{ "display": "flex" }}>
+              <div className="sk-button lighter" onClick={this.copyAccount}>
+                <p className="larger">Account</p>
+              </div>
+              <div className="sk-button lighter larger" onClick={this.copyPassphrase}>
+              <p className="larger">Passphrase</p>
+              </div>
+              <div className="sk-button lighter larger" onClick={this.copyToken}>
+              <p className="larger">Secondfactor</p>
+              </div>
             </div>
           </div>
           <div className="auth-options">

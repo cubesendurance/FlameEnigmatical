@@ -19,7 +19,6 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start-hotfix": "cd node_modules/sn-editor-kit/ && npm install && npm run-script build && cd ../../ && yarn start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
