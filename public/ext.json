@@ -1,8 +1,8 @@
 {
   "identifier": "org.sapphirepack.orcawolfsecrets",
-  "name": "Orcawolf Secrets LOCAL",
+  "name": "Orcawolf Secrets",
   "content_type": "SN|Component",
   "area": "editor-editor",
-  "version": "0.0.5",
-  "url": "http://localhost:3000/"
+  "version": "0.0.6",
+  "url": "https://secrets.sapphirepack.org"
 }
