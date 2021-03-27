@@ -13,12 +13,8 @@ Ability to import from an unencrypted JSON export along with TokenVault.
 
 ## Roadmap
 
-0.0.6 
-    - Copy account, password and second authentication
-    - Create/View/Edit/Delete almost any information for a service
-
 0.0.7
-    - Add TOTP Circle and toggle second authenticaton
+    - Allow either TOTP/Secrets (setup UI)
 
 0.0.8
     - Under the hood changes to make theoretical possibility of editing the incorrect secret impossible
