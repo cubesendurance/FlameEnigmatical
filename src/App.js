@@ -141,9 +141,10 @@ export default class App extends React.Component {
     });
   };
 
-  removeEntry = id => {
+  removeEntry = uuid => {
+    let index = this.getIndexFromUUID(uuid, this.state.entries);
     this.setState(state => {
-      const entries = update(state.entries, { $splice: [[id, 1]] });
+      const entries = update(state.entries, { $splice: [[index, 1]] });
       this.saveNote(entries);
 
       return {
@@ -289,7 +290,7 @@ export default class App extends React.Component {
         >
           <div className="sk-panel">
             <div className="sk-font-small sk-bold">
-              Copied token to clipboard.
+              Copied to clipboard.
             </div>
           </div>
         </div>
@@ -323,7 +324,7 @@ export default class App extends React.Component {
             <ConfirmDialog
               title={`Remove ${editEntry.entry.service}`}
               message="Are you sure you want to remove this entry?"
-              onConfirm={() => this.removeEntry(editEntry.id)}
+              onConfirm={() => this.removeEntry(editEntry.uuid)}
               onCancel={this.onCancel}
             />
           )}
