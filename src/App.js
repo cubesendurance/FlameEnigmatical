@@ -52,7 +52,7 @@ export default class App extends React.Component {
               // We need to write changes so we're not in an constant migration every single time
               // that client opens up app (assuming that rarely edit entries)
               this.saveNote(entries);
-            } else if(!isValidFormat(entries)){
+            } else if (!isValidFormat(entries)) {
               parseError = true;
               entries = [];//We need to make sure entries is empty array otherwise we'll get a
               // blank screen (side effect of converting JSON object that's valid but not correct format)
@@ -141,9 +141,10 @@ export default class App extends React.Component {
     });
   };
 
-  removeEntry = id => {
+  removeEntry = uuid => {
+    let index = this.getIndexFromUUID(uuid, this.state.entries);
     this.setState(state => {
-      const entries = update(state.entries, { $splice: [[id, 1]] });
+      const entries = update(state.entries, { $splice: [[index, 1]] });
       this.saveNote(entries);
 
       return {
@@ -197,6 +198,7 @@ export default class App extends React.Component {
   }
 
   onEdit = uuid => {
+    debugger;
     this.setState(state => ({
       editMode: true,
       importMode: false,
@@ -208,16 +210,16 @@ export default class App extends React.Component {
   };
 
   getByUUID = (uuid, entries) => {
-    for(let i = 0; i < entries.length; i++){
-      if(entries[i].uuid === uuid){
+    for (let i = 0; i < entries.length; i++) {
+      if (entries[i].uuid === uuid) {
         return entries[i]
       }
     }
   }
 
   getIndexFromUUID = (uuid, entries) => {
-    for(let i = 0; i < entries.length; i++){
-      if(entries[i].uuid === uuid){
+    for (let i = 0; i < entries.length; i++) {
+      if (entries[i].uuid === uuid) {
         return i;
       }
     }
@@ -244,12 +246,12 @@ export default class App extends React.Component {
     });
   };
 
-  onRemove = id => {
+  onRemove = uuid => {
     this.setState(state => ({
       confirmRemove: true,
       editEntry: {
-        id,
-        entry: state.entries[id]
+        uuid,
+        entry: state.entries[this.getIndexFromUUID(uuid, this.state.entries)]
       }
     }));
   };
@@ -288,20 +290,13 @@ export default class App extends React.Component {
         >
           <div className="sk-panel">
             <div className="sk-font-small sk-bold">
-              Copied token to clipboard.
+              Copied to clipboard.
             </div>
           </div>
         </div>
         {this.state.parseError && <DataErrorAlert />}
-        <HeaderEntry onAddNew={this.onAddNew} onUpdateSearch={(text) => this.onUpdateSearch(text)}/>
+        <HeaderEntry onAddNew={this.onAddNew} onUpdateSearch={(text) => this.onUpdateSearch(text)} />
         <div id="content">
-          {this.state.importMode &&
-            <DataImportEntry
-              onUpdate={(text) => this.updateTextState(text)}
-              onConfirm={() => this.attemptImport}
-              onCancel={() => this.setState({ importMode: false })}
-            />
-          }
           {this.state.editMode ? (
             <EditEntry
               uuid={editEntry.uuid}
@@ -310,19 +305,25 @@ export default class App extends React.Component {
               onCancel={this.onCancel}
               onImport={this.onImportNew}
             />
-          ) : (
-            <ViewEntries
-              entries={this.state.entries}
-              onEdit={this.onEdit}
-              onRemove={this.onRemove}
-              onCopyToken={this.onCopyToken}
-            />
-          )}
+          ) : this.state.importMode ? (
+            <DataImportEntry
+              onUpdate={(text) => this.updateTextState(text)}
+              onConfirm={() => this.attemptImport}
+              onCancel={() => this.setState({ importMode: false })}
+            /> )
+            : (
+              <ViewEntries
+                entries={this.state.entries}
+                onEdit={this.onEdit}
+                onRemove={this.onRemove}
+                onCopyToken={this.onCopyToken}
+              />
+            )}
           {this.state.confirmRemove && (
             <ConfirmDialog
               title={`Remove ${editEntry.entry.service}`}
               message="Are you sure you want to remove this entry?"
-              onConfirm={() => this.removeEntry(editEntry.id)}
+              onConfirm={() => this.removeEntry(editEntry.uuid)}
               onCancel={this.onCancel}
             />
           )}

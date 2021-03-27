@@ -12,6 +12,11 @@ export default class EditEntry extends React.Component {
       uuid: this.props.uuid,
       entry: this.props.entry
     };
+
+    //If entry secondFactor isn't defined we manually define and assume true
+    if (!this.state.entry.secondFactor || this.state.entry.secondFactor.isTrue2FA === undefined) {
+      this.state.entry.secondFactor = { isTrue2FA: false, secret: '' };
+    }
   }
 
   formatSecret(secret) {
@@ -22,37 +27,64 @@ export default class EditEntry extends React.Component {
     const target = event.target;
     const name = target.name;
 
-    const value =
-      name === 'secret' ? this.formatSecret(target.value) : target.value;
-    if(name === 'secret'){
-      this.setState(state => ({
-        entry: { ...state.entry, 'secondFactor':{'isTrue2FA': true, 'secret': value}}
-      }));
-    } else {
-      this.setState(state => ({
-        entry: { ...state.entry, [name]: value }
-      }));
-    }
+    const value = target.value;
+    this.setState(state => ({
+      entry: { ...state.entry, [name]: value }
+    }));
   };
+
+  handleTrueTOTPInput = event => {
+    const target = event.target;
+    const value = this.formatSecret(target.value);
+    this.setState(state => ({
+      entry: { ...state.entry, 'secondFactor': { 'isTrue2FA': true, 'secret': value } }
+    }));
+  }
+
+  handleFakeTOTPInput = event => {
+    const target = event.target;
+    const value = target.value;
+    this.setState(state => ({
+      entry: { ...state.entry, 'secondFactor': { 'isTrue2FA': false, 'secret': value } }
+    }));
+  }
 
   onSave = e => {
     e.preventDefault();
     let { uuid, entry } = this.state;
     // Need to make sure entry has secondFactor/secret set to '' if undefined
     // Which will occur if the client didn't enter a second factor
-    if(!entry['secondFactor']){
+    if (!entry['secondFactor']) {
       entry['secondFactor'] = {
-        'secret':'',
+        'secret': '',
         'isTrue2FA': false
       }
-    } else if (!entry['secondFactor']['secret']){
+    } else if (!entry['secondFactor']['secret']) {
       entry['secondFactor']['secret'] = '';
     }
-    
+
     //Updating as expected
     this.props.onSave({ uuid, entry });
-    
+
   };
+
+  switch = (e) => {
+    //Need to makesure that we update the value
+    //This covers the edge case that the client enters a value 
+    //then switches the type and clicks create/update
+    let value = document.getElementById('secret').value;
+  
+    if (this.state.entry.secondFactor.isTrue2FA) {
+      value = this.formatSecret(value); //Making sure conform to OTP library requirements
+      this.setState(state => ({
+        entry: { ...state.entry, 'secondFactor': { 'isTrue2FA': false,'secret':value } }
+      }));
+    } else {
+      this.setState(state => ({
+        entry: { ...state.entry, 'secondFactor': { 'isTrue2FA': true,'secret':value } }
+      }));
+    }
+  }
 
   render() {
     const { uuid, entry } = this.state;
@@ -96,13 +128,45 @@ export default class EditEntry extends React.Component {
                 onChange={this.handleInputChange}
                 type="text"
               />
-              <input
-                name="secret"
-                className="sk-input contrast"
-                placeholder="TOTP"
-                onChange={this.handleInputChange}
-                type="text"
-              />
+              <div>
+                {this.state.entry.secondFactor.isTrue2FA ?
+                  <div style={{ "display": "flex" }}>
+                    <input
+                      id='secret'
+                      required
+                      name="secret"
+                      className="sk-input contrast"
+                      placeholder="TOTP"
+                      value={entry.secondFactor.secret}
+                      onChange={this.handleTrueTOTPInput}
+                      type="text"
+                    />
+                    <div
+                      onClick={this.switch}
+                      className="sk-button constrast wide center"
+                    >
+                      Switch to non TOTP
+              </div>
+                  </div>
+                  : <div style={{ "display": "flex" }}>
+                    <input
+                      id='secret'
+                      name="secret"
+                      className="sk-input contrast"
+                      placeholder="Second factor (or leave blank)"
+                      value={entry.secondFactor.secret}
+                      onChange={this.handleFakeTOTPInput}
+                      type="text"
+                    />
+                    <div
+                      onClick={this.switch}
+                      className="sk-button constrast wide center"
+                    >
+                      Switch to TOTP
+              </div>
+                  </div>
+                }
+              </div>
               <input
                 name="notes"
                 className="sk-input contrast"

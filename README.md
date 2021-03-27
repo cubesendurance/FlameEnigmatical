@@ -13,11 +13,11 @@ Ability to import from an unencrypted JSON export along with TokenVault.
 
 ## Roadmap
 
-0.0.7
-    - Allow either TOTP/Secrets (setup UI)
-
 0.0.8
     - Under the hood changes to make theoretical possibility of editing the incorrect secret impossible
 
 1.0.0
     - Searching of secrets (Service, Account, Notes and Site)
+
+1.0.1
+    - Editing should drop you back to same spot on screen
