@@ -137,6 +137,7 @@ export default class EditEntry extends React.Component {
                       name="secret"
                       className="sk-input contrast"
                       placeholder="TOTP"
+                      value={entry.secondFactor.secret}
                       onChange={this.handleTrueTOTPInput}
                       type="text"
                     />
@@ -153,6 +154,7 @@ export default class EditEntry extends React.Component {
                       name="secret"
                       className="sk-input contrast"
                       placeholder="Second factor (or leave blank)"
+                      value={entry.secondFactor.secret}
                       onChange={this.handleFakeTOTPInput}
                       type="text"
                     />
