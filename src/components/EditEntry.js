@@ -89,6 +89,14 @@ export default class EditEntry extends React.Component {
                 type="text"
               />
               <input
+                name="password"
+                className="sk-input contrast"
+                placeholder="passphrase"
+                value={entry.password}
+                onChange={this.handleInputChange}
+                type="text"
+              />
+              <input
                 name="secret"
                 className="sk-input contrast"
                 placeholder="TOTP"
