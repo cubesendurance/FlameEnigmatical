@@ -197,6 +197,7 @@ export default class App extends React.Component {
   }
 
   onEdit = uuid => {
+    debugger;
     this.setState(state => ({
       editMode: true,
       importMode: false,
@@ -244,12 +245,12 @@ export default class App extends React.Component {
     });
   };
 
-  onRemove = id => {
+  onRemove = uuid => {
     this.setState(state => ({
       confirmRemove: true,
       editEntry: {
-        id,
-        entry: state.entries[id]
+        uuid,
+        entry: state.entries[this.getIndexFromUUID(uuid, this.state.entries)]
       }
     }));
   };

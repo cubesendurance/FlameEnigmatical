@@ -9,7 +9,7 @@ export default class AuthEntry extends React.Component {
     this.state = {
       account: this.props.entry['account'],
       passphrase: this.props.entry['password'],
-      token: ''
+      token: '',
     };
 
     this.updateToken();
@@ -89,7 +89,8 @@ export default class AuthEntry extends React.Component {
 
   render() {
     const { service, account, notes } = this.props.entry;
-    const { id, onEdit, onRemove } = this.props;
+    const { onEdit, onRemove } = this.props;
+    const { uuid } = this.props.entry
 
     return (
       <div className="sk-notification sk-base">
@@ -113,8 +114,8 @@ export default class AuthEntry extends React.Component {
           </div>
           <div className="auth-options">
             <AuthMenu
-              onEdit={onEdit.bind(this, id)}
-              onRemove={onRemove.bind(this, id)}
+              onEdit={onEdit.bind(this, uuid)}
+              onRemove={onRemove.bind(this, uuid)}
             />
           </div>
         </div>
