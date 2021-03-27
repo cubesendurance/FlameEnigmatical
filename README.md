@@ -18,3 +18,6 @@ Ability to import from an unencrypted JSON export along with TokenVault.
 
 1.0.0
     - Searching of secrets (Service, Account, Notes and Site)
+
+1.0.1
+    - Editing should drop you back to same spot on screen
