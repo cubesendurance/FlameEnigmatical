@@ -29,6 +29,11 @@ export default class AuthEntry extends React.Component {
     this.timer = setTimeout(this.updateToken, timeLeft * 1000);
   };
 
+  getTimeLeft() {
+    const seconds = new Date().getSeconds();
+    return seconds > 29 ? 60 - seconds : 30 - seconds;
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     // If the secret changed make sure to recalculate token
     if (nextProps.entry.secret !== this.props.entry.secret) {

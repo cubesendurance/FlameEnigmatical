@@ -4,5 +4,5 @@
   "content_type": "SN|Component",
   "area": "editor-editor",
   "version": "0.0.6",
-  "url": "https://secrets.sapphirepack.org"
+  "url": "http://localhost:3000"
 }
