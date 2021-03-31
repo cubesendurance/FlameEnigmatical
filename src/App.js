@@ -116,8 +116,21 @@ export default class App extends React.Component {
 
   addEntries = newEntries => {
     this.setState(state => {
-      const entries = state.entries.concat(newEntries);
-      this.saveNote(entries);
+      let fakeHashObject = {};
+      for(let i = 0; i < state.entries.length; i++){
+        //We assume that previous UUUID's added were already checked.
+        fakeHashObject[state.entries[i].uuid] = true;
+      }
+      for(let i = 0; i < newEntries.length; i++){
+        if(fakeHashObject[newEntries[i].uuid]){
+          let uuid = v4();
+          while(fakeHashObject[uuid]){
+            uuid = v4();
+          }
+          fakeHashObject[uuid] = true;
+          newEntries[i].uuid;
+        }
+      }
 
       return {
         editMode: false,
