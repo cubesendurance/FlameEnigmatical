@@ -115,9 +115,23 @@ export default class App extends React.Component {
   };
 
   addEntries = newEntries => {
+    let entries = this.state.entries.concat(newEntries);
     this.setState(state => {
-      const entries = state.entries.concat(newEntries);
-      this.saveNote(entries);
+      let fakeHashObject = {};
+      for(let i = 0; i < state.entries.length; i++){
+        //We assume that previous UUUID's added were already checked.
+        fakeHashObject[state.entries[i].uuid] = true;
+      }
+      for(let i = 0; i < newEntries.length; i++){
+        if(fakeHashObject[newEntries[i].uuid]){
+          let uuid = v4();
+          while(fakeHashObject[uuid]){
+            uuid = v4();
+          }
+          fakeHashObject[uuid] = true;
+          newEntries[i].uuid = uuid;
+        }
+      }
 
       return {
         editMode: false,
@@ -226,18 +240,6 @@ export default class App extends React.Component {
     return -1;
   }
 
-  onSearch = text => {
-    this.setState(state => ({
-      filterText: text
-    }))
-  }
-
-  onUpdateSearch = text => {
-    this.setState(state => ({
-      filterText: text
-    }))
-  }
-
   onCancel = () => {
     this.setState({
       confirmRemove: false,
@@ -295,7 +297,7 @@ export default class App extends React.Component {
           </div>
         </div>
         {this.state.parseError && <DataErrorAlert />}
-        <HeaderEntry onAddNew={this.onAddNew} onUpdateSearch={(text) => this.onUpdateSearch(text)} />
+        <HeaderEntry onAddNew={this.onAddNew} />
         <div id="content">
           {this.state.editMode ? (
             <EditEntry
