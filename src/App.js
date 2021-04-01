@@ -115,6 +115,7 @@ export default class App extends React.Component {
   };
 
   addEntries = newEntries => {
+    let entries = this.state.entries.concat(newEntries);
     this.setState(state => {
       let fakeHashObject = {};
       for(let i = 0; i < state.entries.length; i++){
@@ -128,7 +129,7 @@ export default class App extends React.Component {
             uuid = v4();
           }
           fakeHashObject[uuid] = true;
-          newEntries[i].uuid;
+          newEntries[i].uuid = uuid;
         }
       }
 
@@ -239,18 +240,6 @@ export default class App extends React.Component {
     return -1;
   }
 
-  onSearch = text => {
-    this.setState(state => ({
-      filterText: text
-    }))
-  }
-
-  onUpdateSearch = text => {
-    this.setState(state => ({
-      filterText: text
-    }))
-  }
-
   onCancel = () => {
     this.setState({
       confirmRemove: false,
@@ -308,7 +297,7 @@ export default class App extends React.Component {
           </div>
         </div>
         {this.state.parseError && <DataErrorAlert />}
-        <HeaderEntry onAddNew={this.onAddNew} onUpdateSearch={(text) => this.onUpdateSearch(text)} />
+        <HeaderEntry onAddNew={this.onAddNew} />
         <div id="content">
           {this.state.editMode ? (
             <EditEntry
