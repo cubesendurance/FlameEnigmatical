@@ -9,10 +9,13 @@ A general purpose password safe for the StandardNotes community.
 Storage of all secrets you can imagine in one easy to use location.
 
 ### Import
-Ability to import from an unencrypted JSON export along with TokenVault.
-
-Suports Bitwarden unencrypted export along with Tokenvalt
+Ability to import from an unencrypted JSON export from Bitwarden along with TokenVault.
 
 ## Roadmap
 
-Just praticing development no further active development planned. Please use at own peril.
+No longer supported due to various security concerns with the inability to verify that this hasn't been tampered w/ OTA or from Sapphirian servers.
+
+Current demo can be found at secrets.sapphirepack.org and extension json can be found at secrets.sapphirepack.org/ext.json
+
+
+

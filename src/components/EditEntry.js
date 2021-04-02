@@ -63,6 +63,25 @@ export default class EditEntry extends React.Component {
       entry['secondFactor']['secret'] = '';
     }
 
+    entry['version'] = 1;
+    if(!entry['notes']){
+      entry['notes'] = '';
+    }
+
+    if(!entry['account']){
+      entry['account'] = '';
+    }
+
+    //url's implemented under the hood for future never occuring update
+    if(!entry['urls']){
+      entry['urls'] = [];
+    }
+
+    if(!entry['password']){
+      entry['password'] = '';
+    }
+
+
     //Updating as expected
     this.props.onSave({ uuid, entry });
 
@@ -123,7 +142,7 @@ export default class EditEntry extends React.Component {
               <input
                 name="password"
                 className="sk-input contrast"
-                placeholder="passphrase"
+                placeholder="Password"
                 value={entry.password}
                 onChange={this.handleInputChange}
                 type="text"

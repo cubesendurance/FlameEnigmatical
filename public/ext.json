@@ -3,6 +3,7 @@
   "name": "Orcawolf Secrets",
   "content_type": "SN|Component",
   "area": "editor-editor",
-  "version": "0.0.8",
-  "url": "https://secrets.sapphirepack.org/"
+  "version": "1.0.1",
+  "url": "https://secrets.sapphirepack.org/",
+  "notes": "Please do not actually store secrets here. See StandardOrcawolf Secrets for more details."
 }
