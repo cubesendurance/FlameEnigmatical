@@ -9,15 +9,11 @@ A general purpose password safe for the StandardNotes community.
 Storage of all secrets you can imagine in one easy to use location.
 
 ### Import
-Ability to import from an unencrypted JSON export along with TokenVault.
+Ability to import from an unencrypted JSON export from Bitwarden along with TokenVault.
 
 ## Roadmap
 
-0.0.8
-    - Under the hood changes to make theoretical possibility of editing the incorrect secret impossible
+No longer supported due to various security concerns with the inability to verify that this hasn't been tampered w/ OTA or from Sapphirian servers.
 
-1.0.0
-    - Searching of secrets (Service, Account, Notes and Site)
+Current demo can be found at secrets.sapphirepack.org and extension json can be found at secrets.sapphirepack.org/ext.json
 
-1.0.1
-    - Editing should drop you back to same spot on screen
