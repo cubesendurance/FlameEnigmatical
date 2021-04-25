@@ -5,7 +5,6 @@ import AuthMenu from './AuthMenu';
 export default class AuthEntry extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       account: this.props.entry['account'],
       passphrase: this.props.entry['password'],
@@ -95,12 +94,11 @@ export default class AuthEntry extends React.Component {
     return (
       <div className="sk-notification sk-base">
         <div className="auth-entry">
+          <div className="auth-info">
+            <div className="auth-service"><h1>{service}</h1></div>
+          </div>
           <div className="auth-details">
-            <div className="auth-info">
-              <div className="auth-service">{service}</div>
-              <div className="auth-account">{account}</div>
-            </div>
-            <div className="sk-button-row" style={{ "display": "flex" }}>
+            <div className="sk-button-row fill" style={{ "display": "flex" }}>
               <div className="sk-button lighter" onClick={this.copyAccount}>
                 <p className="larger">Account</p>
               </div>
@@ -111,12 +109,12 @@ export default class AuthEntry extends React.Component {
               <p className="larger">Secondfactor</p>
               </div>
             </div>
-          </div>
-          <div className="auth-options">
+            <div className="auth-options">
             <AuthMenu
               onEdit={onEdit.bind(this, uuid)}
               onRemove={onRemove.bind(this, uuid)}
             />
+          </div>
           </div>
         </div>
         {notes && (

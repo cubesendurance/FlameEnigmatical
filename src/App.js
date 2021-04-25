@@ -50,7 +50,7 @@ export default class App extends React.Component {
             if (!isValidFormat(entries) && canUpgrade(entries)) {
               entries = migrateFromV0(entries);
               // We need to write changes so we're not in an constant migration every single time
-              // that client opens up app (assuming that rarely edit entries)
+              // that client opens up app (assuming that client rarely edit entries)
               this.saveNote(entries);
             } else if (!isValidFormat(entries)) {
               parseError = true;
