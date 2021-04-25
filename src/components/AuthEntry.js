@@ -87,7 +87,7 @@ export default class AuthEntry extends React.Component {
   };
 
   render() {
-    const { service, account, notes } = this.props.entry;
+    const { service, notes } = this.props.entry;
     const { onEdit, onRemove } = this.props;
     const { uuid } = this.props.entry
 

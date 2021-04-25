@@ -118,14 +118,6 @@ html {
   align-items: center;
   flex-direction: column;
 
-  // Collapse on mobile
-  @media screen and (max-width: 480px) {
-    .auth-details {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-    }
-  }
-
   .auth-details {
     margin-bottom: 8px;
     flex: 1;
