@@ -1,9 +1,9 @@
 {
-  "identifier": "org.sapphirepack.orcawolfsecrets",
-  "name": "Orcawolf Secrets",
+  "identifier": "org.sapphirepack.flameenigmatical",
+  "name": "Flame Enigmatical",
   "content_type": "SN|Component",
   "area": "editor-editor",
-  "version": "1.0.1",
-  "url": "http://localhost:3000",
+  "version": "1.0.2",
+  "url": "https://secrets.sapphirepack.org/",
   "notes": "A safespace for your digital identities"
 }

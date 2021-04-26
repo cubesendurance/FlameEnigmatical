@@ -13,7 +13,7 @@ export default class HeaderEntry extends React.Component {
     return (
       <div id="header">
         <div className="section-title-bar-header">
-          <div>Orcawolf Secrets</div>
+          <div></div>
           <div class="sk-button constrast wide" style={{"font-size":"larger"}} onClick={this.props.onAddNew}>+</div>
         </div>
       </div>

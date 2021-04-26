@@ -76,8 +76,8 @@ export default class App extends React.Component {
           entries = JSON.parse(text);
         } finally {
           return {
-            html: `<div><strong>${entries.length}</strong> TokenVault Entries </div>`,
-            plain: `${entries.length} TokenVault Entries`,
+            html: `<div><strong>${entries.length}</strong> sparks </div>`,
+            plain: `${entries.length} sparks`,
           };
         }
       },

@@ -1,4 +1,5 @@
-# Getting Started with Orca Wolf Secrets
+# Getting Started with FlameEnigmatical
+
 
 Open up Standard Notes and paste into extension URL `secrets.sapphirepack.org/ext.json`
 
