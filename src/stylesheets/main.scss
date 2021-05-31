@@ -199,88 +199,6 @@ html {
   }
 }
 
-/* spinner */
-.countdown-pie {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  background: var(--sn-stylekit-background-color);
-}
-
-.countdown-pie,
-.countdown-pie * {
-  box-sizing: border-box;
-}
-
-.countdown-pie .pie {
-  width: 50%;
-  height: 100%;
-  transform-origin: 100% 50%;
-  position: absolute !important;
-  background: var(--sn-stylekit-info-color);
-}
-
-.countdown-pie .spinner {
-  border-radius: 100% 0 0 100% / 50% 0 0 50%;
-  z-index: 20;
-  border-right: none;
-  // Injected in CountdownPie.js
-  // animation: rota 30s linear infinite;
-}
-
-.countdown-pie .background {
-  border-radius: 50%;
-  width: 100%;
-  z-index: 40;
-  color: var(--sn-stylekit-info-color);
-  opacity: 0.4;
-}
-
-.countdown-pie .filler {
-  border-radius: 0 100% 100% 0 / 0 50% 50% 0;
-  left: 50%;
-  opacity: 0;
-  z-index: 10;
-  // Injected in CountdownPie.js
-  // animation: opa 30s steps(1, end) infinite reverse;
-  border-left: none;
-}
-
-.countdown-pie .mask {
-  width: 50%;
-  height: 100%;
-  position: absolute;
-  background: inherit;
-  opacity: 1;
-  z-index: 30;
-  // Injected in CountdownPie.js
-  // animation: opa 30s steps(1, end) infinite;
-}
-
-// Injected in CountdownPie.js
-// @keyframes rota {
-//   0% {
-//     transform: rotate(0deg);
-//   }
-
-//   100% {
-//     transform: rotate(360deg);
-//   }
-// }
-
-// Injected in CountdownPie.js
-// @keyframes opa {
-//   0% {
-//     opacity: 1;
-//   }
-
-//   50%,
-//   100% {
-//     opacity: 0;
-//   }
-// }
-
-
 .section-title-bar-header {
   display: flex;
   justify-content: space-between;
@@ -311,7 +229,6 @@ html {
 }
 
 .sk-button.lighter {
-  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -320,12 +237,37 @@ html {
   background-color: var(--sn-stylekit-secondary-contrast-background-color);
   opacity: 1.0;
 }
+.sk-button.lighter::before {
+  content: "";
+}
+
+.sk-button.lighter::after {
+  content: "";
+}
+
+.sk-button.lighter.success1 {
+  animation: successClick 2s;
+  animation-fill-mode: forwards;
+}
+
+.sk-button.lighter.fail1 {
+  animation: failClick 2s;
+  animation-fill-mode: forwards;
+}
+
+.sk-button.lighter.reset1 {
+  animation: resetClickSuccess 2s;
+  animation-fill-mode: forwards;
+}
+
+.sk-button.lighter.reset2 {
+  animation: resetClickError 2s;
+  animation-fill-mode: forwards;
+}
 
 .sk-button.wide {
   padding: 0.3rem 1.7rem;
 }
-
-
 
 .larger {
   font-size:larger;
@@ -338,4 +280,74 @@ html {
 
 .fill {
   flex-grow: 1;
+}
+
+@keyframes successClick {
+  0% { 
+    background-color: var(--sn-stylekit-secondary-contrast-background-color);
+    color: var(--sn-stylekit-foreground-color);
+  }
+
+  25% {
+    background-color: var(--sn-stylekit-success-color);
+    color: var(--sn-stylekit-success-contrast-color);
+  }
+
+  100% {
+    background-color: var(--sn-stylekit-success-color);
+    color: var(--sn-stylekit-success-contrast-color);
+  }
+}
+
+@keyframes failClick {
+  0% { 
+    background-color: var(--sn-stylekit-secondary-contrast-background-color);
+    color: var(--sn-stylekit-foreground-color);
+  }
+
+  25% {
+    background-color: var(--sn-stylekit-warning-color);
+    color: var(--sn-stylekit-warning-contrast-color);
+  }
+
+  100% {
+    background-color: var(--sn-stylekit-warning-color);
+    color: var(--sn-stylekit-warning-contrast-color);
+  }
+}
+
+@keyframes resetClickSuccess {
+  0% { 
+    background-color: var(--sn-stylekit-success-color);
+    color: var(--sn-stylekit-success-contrast-color);
+  }
+
+  25% {
+    background-color: var(--sn-stylekit-success-color);
+    color: var(--sn-stylekit-success-contrast-color);
+  }
+
+  100% {
+    background-color: var(--sn-stylekit-secondary-contrast-background-color);
+    color: var(--sn-stylekit-foreground-color);
+  }
+
+}
+
+@keyframes resetClickError {
+  0% { 
+    background-color: var(--sn-stylekit-warning-color);
+    color: var(--sn-stylekit-warning-contrast-color);
+  }
+
+  25% {
+    background-color: var(--sn-stylekit-warning-color);
+    color: var(--sn-stylekit-warning-contrast-color);
+  }
+
+  100% {
+    background-color: var(--sn-stylekit-secondary-contrast-background-color);
+    color: var(--sn-stylekit-foreground-color);
+  }
+
 }

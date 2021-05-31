@@ -9,6 +9,13 @@ export default class AuthEntry extends React.Component {
       account: this.props.entry['account'],
       passphrase: this.props.entry['password'],
       token: '',
+      isCopyFail: false,
+      isCopyFromFail: false,
+      isCopySuccess: false,
+      isCopyFromSuccess: false,
+      isCopyAccount: true,
+      isCopyPassword: false,
+      isCopySecondFactor: false
     };
 
     this.updateToken();
@@ -63,7 +70,39 @@ export default class AuthEntry extends React.Component {
     textField.select();
     document.execCommand('copy');
     textField.remove();
-    this.props.onCopyToken();
+
+    this.copyAnimation("copyAccount");
+    if(textField.innerText !== ""){
+      this.setState({isCopyFail: false, isCopySuccess: true, isCopyFromFail: false, isCopyFromSuccess: false});
+      setTimeout(() => {
+
+        if(this.setClearOnCopyAccount){
+          clearTimeout(this.setClearOnCopyAccount)
+        }
+  
+        this.setClearOnCopyAccount = setTimeout(() =>{
+          this.setState({isCopyFail: false, isCopySuccess: false, isCopyFromFail: false, isCopyFromSuccess: true});
+        }, 3000)
+        //Clear if used before running next one if clicking same thing again
+        //Otherwise if clicking something else, do not worry about current fadeout
+        //Look at clearing timeout for copy clicking
+  
+        //Show copy notification
+      })
+    } else {
+      this.setState({isCopyFail: true, isCopySuccess: true, isCopyFromFail: false, isCopyFromSuccess: false});
+      setTimeout(() => {
+
+        if(this.setClearOnCopyAccount){
+          clearTimeout(this.setClearOnCopyAccount)
+        }
+  
+        this.setClearOnCopyAccount = setTimeout(() =>{
+          this.setState({isCopyFail: false, isCopySuccess: false, isCopyFromFail: true, isCopyFromSuccess: false});
+        }, 3000)
+      })
+    }
+
   };
 
   copyPassphrase = event => {
@@ -73,7 +112,8 @@ export default class AuthEntry extends React.Component {
     textField.select();
     document.execCommand('copy');
     textField.remove();
-    this.props.onCopyToken();
+    
+    this.copyAnimation("copyPassphrase");
   };
 
   copyToken = event => {
@@ -83,8 +123,17 @@ export default class AuthEntry extends React.Component {
     textField.select();
     document.execCommand('copy');
     textField.remove();
-    this.props.onCopyToken();
+
+    this.copyAnimation("copyToken");
   };
+
+
+  copyAnimation = field => {
+    // Calculate which field to render transition for
+    // Calculate which variables will need to be swapped from
+    // Ensure that isCopyFromFail and isCopyFromSuccess are cleared
+
+  }
 
   render() {
     const { service, notes } = this.props.entry;
@@ -99,13 +148,16 @@ export default class AuthEntry extends React.Component {
           </div>
           <div className="auth-details">
             <div className="sk-button-row fill" style={{ "display": "flex" }}>
-              <div className="sk-button lighter" onClick={this.copyAccount}>
+              <div className={`sk-button lighter ${this.state.isCopyAccount && this.state.isCopySuccess ? 'success1': ''} 
+                            ${this.state.isCopyAccount && this.state.isCopyFail ? 'fail1': ''} 
+                            ${(this.state.isCopyAccount && this.state.isCopyFromSuccess) ? 'reset1': ''}
+                            ${(this.state.isCopyAccount && this.state.isCopyFromFail) ? 'reset2': ''} `} onClick={this.copyAccount}>
                 <p className="larger">Account</p>
               </div>
-              <div className="sk-button lighter larger" onClick={this.copyPassphrase}>
+              <div className="sk-button lighter" onClick={this.copyPassphrase}>
               <p className="larger">Passphrase</p>
               </div>
-              <div className="sk-button lighter larger" onClick={this.copyToken}>
+              <div className="sk-button lighter" onClick={this.copyToken}>
               <p className="larger">Secondfactor</p>
               </div>
             </div>

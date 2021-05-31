@@ -4,6 +4,6 @@
   "content_type": "SN|Component",
   "area": "editor-editor",
   "version": "1.0.2",
-  "url": "https://secrets.sapphirepack.org/",
+  "url": "http:localhost:3000/",
   "notes": "A safespace for your digital identities"
 }

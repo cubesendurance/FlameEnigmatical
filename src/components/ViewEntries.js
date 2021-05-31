@@ -1,7 +1,7 @@
 import React from 'react';
 import AuthEntry from './AuthEntry';
 
-const ViewEntries = ({ entries, onEdit, onRemove, onCopyToken }) => (
+const ViewEntries = ({ entries, onEdit, onRemove }) => (
   <div className="auth-list">
     {entries.map((entry) => (
       <AuthEntry
@@ -10,7 +10,6 @@ const ViewEntries = ({ entries, onEdit, onRemove, onCopyToken }) => (
         entry={entry}
         onEdit={onEdit}
         onRemove={onRemove}
-        onCopyToken={onCopyToken}
       />
     ))}
   </div>
